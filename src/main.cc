@@ -26,5 +26,12 @@ int main(int argc, char *argv[])
     std::cout << s1e << std::endl;
     std::cout << h1e << std::endl;
 
+    double int2e_element = get_int2e_element(eri, 6, 5, 1, 0);
+    std::cout << "Integral element: " << int2e_element << std::endl;
+    int2e_element = get_int2e_element(eri, 5, 6, 1, 0);
+    std::cout << "Integral element: " << int2e_element << std::endl;
+    int2e_element = get_int2e_element(eri, 5, 6, 0, 1);
+    std::cout << "Integral element: " << int2e_element << std::endl;
+    std::cout << "Reference value: "  << 0.024847613930679 << std::endl;
     return 0;
 }

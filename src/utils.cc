@@ -1,7 +1,5 @@
 #include "utils.h"
 
-
-
 int read_nao_from_file(std::string file_name)
 {
     std::ifstream input{file_name};
@@ -29,9 +27,10 @@ Int1e read_int1e_from_file(std::string file_name, int nao)
     Int1e int1e(nao, nao);
 
     while (input >> mu >> nu >> val) {
-        printf("%d %d %f\n", a, b, val);
-        int1e(a, b) = val;
-        int1e(b, a) = val;
+        mu = mu - 1;
+        nu = nu - 1;
+        int1e(mu, nu) = val;
+        int1e(nu, mu) = val;
     }
 
     input.close();
@@ -59,7 +58,6 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
         sg = sg - 1;
         munu = mu > nu ? mu*(mu+1)/2 + nu : nu*(nu+1)/2 + mu;
         lmsg = lm > sg ? lm*(lm+1)/2 + sg : sg*(sg+1)/2 + lm;
-        printf("%d %d %d %d %d %d\n", mu, nu, lm, sg, munu, lmsg);
         int2e(munu, lmsg) = val;
         int2e(lmsg, munu) = val;
     }
@@ -69,7 +67,7 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
     return int2e;
 }
 
-double get_int2e_element(Int2e int2e, int mu, int nu, int lm, int sg)
+double get_int2e_element(const Int2e int2e, int mu, int nu, int lm, int sg)
 {
     int munu = mu > nu ? mu*(mu+1)/2 + nu : nu*(nu+1)/2 + mu;
     int lmsg = lm > sg ? lm*(lm+1)/2 + sg : sg*(sg+1)/2 + lm;

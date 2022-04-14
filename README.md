@@ -21,10 +21,6 @@ Read the AO-basis [overlap](./input/h2o/STO-3G/s.dat), [kinetic-energy](./input/
 Read the two-electron repulsion integrals from the  [eri.dat](./input/h2o/STO-3G/eri.dat)  
 file. The integrals in this file are provided in chemist's notation with the eight-fold permutational symmetry relationships.
 
-  * [Hint 1](./hints/hint3-1.md): Compound indices
-  * [Hint 2](./hints/hint3-2.md): Pre-Computed Lookup Arrays
-  * [Hint 3](./hints/hint3-3.md): Reading the two-electron integrals
-
 
 <!--
 

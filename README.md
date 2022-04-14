@@ -171,3 +171,15 @@ A Mulliken population analysis (also described in Szabo & Ostlund, Ch. 3) requir
 
 where the summation is limited to only those basis functions centered on atom *A*.
 -->
+
+
+## Run Code
+To run the code, use the following commands:
+```
+git clone git@github.com:yangdatou/SimpleWFN.git
+mkdir bin
+make test
+```
+
+## References
+Szabo and Ostlund. *Modern Quantum Chemistry: Introduction to Advanced Electronic Structure Theory*, Dover Publications (1996)

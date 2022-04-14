@@ -44,12 +44,16 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
     std::ifstream input{file_name};
     assert(input.good());
 
+    int npair = nao * (nao + 1) / 2;
+    int neri  = npair * (npair + 1) / 2;
+
     double val;
     int mu, nu, lm, sg; 
-    int munu; // = mu > nu ? mu*(mu+1)/2 + nu : nu*(nu+1)/2 + mu;
-    int lmsg; // = lm > sg ? lm*(lm+1)/2 + sg : sg*(sg+1)/2 + lm;
+    int munu; 
+    int lmsg;
+    int munulmsg;
 
-    Int2e int2e(nao * (nao + 1) / 2, nao * (nao + 1) / 2);
+    Int2e int2e(neri);
 
     while (input >> mu >> nu >> lm >> sg >> val) {
         mu = mu - 1;
@@ -58,8 +62,8 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
         sg = sg - 1;
         munu = mu > nu ? mu*(mu+1)/2 + nu : nu*(nu+1)/2 + mu;
         lmsg = lm > sg ? lm*(lm+1)/2 + sg : sg*(sg+1)/2 + lm;
-        int2e(munu, lmsg) = val;
-        int2e(lmsg, munu) = val;
+        munulmsg = munu > lmsg ? munu*(munu+1)/2 + lmsg : lmsg*(lmsg+1)/2 + munu;
+        int2e(munulmsg) = val;
     }
 
     input.close();
@@ -71,5 +75,6 @@ double get_int2e_element(const Int2e int2e, int mu, int nu, int lm, int sg)
 {
     int munu = mu > nu ? mu*(mu+1)/2 + nu : nu*(nu+1)/2 + mu;
     int lmsg = lm > sg ? lm*(lm+1)/2 + sg : sg*(sg+1)/2 + lm;
-    return int2e(munu, lmsg);
+    int munulmsg = munu > lmsg ? munu*(munu+1)/2 + lmsg : lmsg*(lmsg+1)/2 + munu;
+    return int2e(munulmsg);
 }

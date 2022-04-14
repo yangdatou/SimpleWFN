@@ -9,7 +9,7 @@
 #include "Eigen/Core"
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Int1e;
-typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Int2e;
+typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Int2e;
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Matrix;
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vector;

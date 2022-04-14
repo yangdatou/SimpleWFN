@@ -1,18 +1,21 @@
 #include "utils.h"
 
 int read_nao_from_file(std::string file_name)
-{
+{   
+    // Open the file
     std::ifstream input{file_name};
+
+    // Check if the file is open
     assert(input.good());
 
-    int a, b;
     double val;
+    int mu, nu;
 
-    while (input >> a >> b >> val) {
+    while (input >> mu >> nu >> val) {
         // do nothing
     }
 
-    return a;
+    return mu;
 }
 
 Int1e read_int1e_from_file(std::string file_name, int nao)
@@ -25,6 +28,7 @@ Int1e read_int1e_from_file(std::string file_name, int nao)
     int mu, nu; 
 
     Int1e int1e(nao, nao);
+    int1e.setZero();
 
     while (input >> mu >> nu >> val) {
         mu = mu - 1;
@@ -54,6 +58,7 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
     int munulmsg;
 
     Int2e int2e(neri);
+    int2e.setZero();
 
     while (input >> mu >> nu >> lm >> sg >> val) {
         mu = mu - 1;

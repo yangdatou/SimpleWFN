@@ -15,7 +15,8 @@ typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> M
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vector;
 
 int    read_nao_from_file(std::string file_name);
-double get_int2e_element(Int2e int2e, int mu, int nu, int lm, int sg);
 
 Int1e read_int1e_from_file(std::string file_name, int nao);
 Int2e read_int2e_from_file(std::string file_name, int nao);
+
+double get_int2e_element(Int2e int2e, int mu, int nu, int lm, int sg);

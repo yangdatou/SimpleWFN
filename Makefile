@@ -11,7 +11,7 @@ test: main test_utils
 	./bin/main.x ./input/h2o/STO-3G/ 5 5 > ./output/h2o-sto-3g.log
 	./bin/main.x ./input/h2o/DZ/     5 5 > ./output/h2o-dz.log
 	./bin/main.x ./input/ch4/STO-3G/ 5 5 > ./output/ch4-sto-3g.log
-	# ./bin/main.x ./input/h2o/DZP/    5 5 > ./output/h2o-dzp.log
+	./bin/main.x ./input/h2o/DZP/    5 5 > ./output/h2o-dzp.log
 
 # Compile the main executable
 main: ./src/main.cc ./bin/utils.o

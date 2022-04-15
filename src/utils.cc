@@ -56,7 +56,7 @@ Int1e read_int1e_from_file(std::string file_name, int nao)
     int mu, nu; 
 
     Int1e int1e(nao, nao);
-    int1e.setZero();
+    int1e << Int1e::Zero(nao, nao);
 
     while (input >> mu >> nu >> val) {
         mu = mu - 1;
@@ -86,7 +86,7 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
     int munulmsg;
 
     Int2e int2e(neri);
-    int2e.setZero();
+    int2e << Int2e::Zero(neri);
 
     while (input >> mu >> nu >> lm >> sg >> val) {
         mu = mu - 1;

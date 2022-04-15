@@ -1,14 +1,16 @@
 #include "utils.h"
 
+#define INDEX(mu, nu) mu > nu ? mu*(mu+1)/2 + nu : nu*(nu+1)/2 + mu
+
 void print_matrix(const Matrix& mat, std::string title)
 {   
-    printf("%s\n", title.c_str());
+    printf("\n%s\n", title.c_str());
     for (int j = 0; j < mat.cols(); ++j) {
         if (j == 0) {
             printf("% 13d", j);
         }
         else{
-            printf("% 10d", j);
+            printf("% 9d", j);
         }
         
     }
@@ -18,13 +20,13 @@ void print_matrix(const Matrix& mat, std::string title)
         printf(" -%2d ", i);
         for (int j = 0; j < mat.cols(); ++j) {
             
-            printf(" % 8.6f", mat(i, j));
+            printf(" % 8.4f", mat(i, j));
         }
         printf("\n");
     }
 }
 
-Matrix sqrt_matrix(Matrix m)
+Matrix sqrt_inv_matrix(Matrix m)
 {
     Eigen::SelfAdjointEigenSolver<Matrix> solver(m);
     Matrix evecs = solver.eigenvectors();
@@ -103,9 +105,9 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
         nu = nu - 1;
         lm = lm - 1;
         sg = sg - 1;
-        munu = mu > nu ? mu*(mu+1)/2 + nu : nu*(nu+1)/2 + mu;
-        lmsg = lm > sg ? lm*(lm+1)/2 + sg : sg*(sg+1)/2 + lm;
-        munulmsg = munu > lmsg ? munu*(munu+1)/2 + lmsg : lmsg*(lmsg+1)/2 + munu;
+        munu = INDEX(mu, nu);
+        lmsg = INDEX(lm, sg);
+        munulmsg = INDEX(munu, lmsg);
         int2e(munulmsg) = val;
     }
 
@@ -116,8 +118,8 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
 
 double get_int2e_element(const Int2e int2e, int mu, int nu, int lm, int sg)
 {
-    int munu = mu > nu ? mu*(mu+1)/2 + nu : nu*(nu+1)/2 + mu;
-    int lmsg = lm > sg ? lm*(lm+1)/2 + sg : sg*(sg+1)/2 + lm;
-    int munulmsg = munu > lmsg ? munu*(munu+1)/2 + lmsg : lmsg*(lmsg+1)/2 + munu;
+    int munu     = INDEX(mu, nu);
+    int lmsg     = INDEX(lm, sg);
+    int munulmsg = INDEX(munu, lmsg);
     return int2e(munulmsg);
 }

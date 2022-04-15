@@ -7,7 +7,7 @@ CXXFLAGS ?= -Wall -Werror -Wno-sign-compare -Wno-comment -std=c++11 -O2 -I $(ARM
 # Run a test
 test: main test_utils
 	./bin/test_utils.x
-	./bin/main.x ./input/h2o/STO-3G/ > ./output/h2o-sto-3g.log
+	./bin/main.x ./input/h2o/STO-3G/ 5 5 > ./output/h2o-sto-3g.log
 
 # Compile the main executable
 main: ./src/main.cc ./src/utils.cc

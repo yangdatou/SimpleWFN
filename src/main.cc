@@ -60,6 +60,7 @@ int main(int argc, char *argv[])
     while (not is_converged and not is_max_iter){
         fock = h1e;
 
+        // TODO: Check the locality of the memory access
         for (int mu = 0; mu < nao; ++mu) {
             for (int nu = 0; nu < nao; ++nu) {
                 for (int lm = 0; lm < nao; ++lm) {

@@ -1,5 +1,41 @@
 #include "utils.h"
 
+void print_matrix(const Matrix& mat, std::string title)
+{   
+    printf("%s\n", title.c_str());
+    for (int j = 0; j < mat.cols(); ++j) {
+        if (j == 0) {
+            printf("% 13d", j);
+        }
+        else{
+            printf("% 10d", j);
+        }
+        
+    }
+    printf("\n");
+
+    for (int i = 0; i < mat.rows(); ++i) {
+        printf(" -%2d ", i);
+        for (int j = 0; j < mat.cols(); ++j) {
+            
+            printf(" % 8.6f", mat(i, j));
+        }
+        printf("\n");
+    }
+}
+
+Matrix sqrt_matrix(Matrix m)
+{
+    Eigen::SelfAdjointEigenSolver<Matrix> solver(m);
+    Matrix evecs = solver.eigenvectors();
+    Matrix evals = solver.eigenvalues();
+    Matrix evals_inv_sqrt = evals.array().inverse().sqrt();
+
+    Matrix sqrt_matrix = evecs * evals_inv_sqrt.asDiagonal() * evecs.transpose();
+    
+    return sqrt_matrix;
+}
+
 int read_nao_from_file(std::string file_name)
 {   
     // Open the file
@@ -14,6 +50,8 @@ int read_nao_from_file(std::string file_name)
     while (input >> mu >> nu >> val) {
         // do nothing
     }
+
+    input.close();
 
     return mu;
 }

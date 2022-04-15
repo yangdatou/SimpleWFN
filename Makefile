@@ -5,8 +5,9 @@ CXX      ?= g++
 CXXFLAGS ?= -Wall -Werror -Wno-sign-compare -Wno-comment -std=c++11 -O2 -I $(ARMADILLO_INCLUDE) -I $(EIGEN_INCLUDE) -DARMA_DONT_USE_WRAPPER -framework Accelerate
 
 # Run a test
-test: test_utils
+test: main test_utils
 	./bin/test_utils.x
+	./bin/main.x ./input/h2o/STO-3G/ > ./output/h2o-sto-3g.log
 
 # Compile the main executable
 main: ./src/main.cc ./src/utils.cc

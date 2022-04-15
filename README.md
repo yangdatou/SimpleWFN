@@ -1,46 +1,28 @@
 # SimpleWFN
 This project closely follows [ProgrammingProjects](https://github.com/CrawfordGroup/ProgrammingProjects/tree/master/Project%2301) from Crawford Group. 
 The purpose of this project is to practice fundamental C++ programming techniques in the context of electronic structure problems and to provide a deeper
-understanding of Hartree-Fock theory by demonstrating a simple implementation of the self-consistent-field method. 
+understanding of Hartree-Fock theory and post-HF algorithms.
 
+## Hartree-Fock Theory
 The theoretical background can be found in Ch. 3 of the text by Szabo and Ostlund or in the 
 [nice set of on-line notes](http://vergil.chemistry.gatech.edu/notes/hf-intro/hf-intro.html) written by David Sherrill.
 
-## Step 1: Nuclear Repulsion Energy
+- Step 1: Nuclear Repulsion Energy 
 
-Read the nuclear repulsion energy from the [enuc.dat](./input/h2o/STO-3G/enuc.dat)
+- Step 2: One-Electron Integrals
 
-## Step 2: One-Electron Integrals
+- Step 3: Two-Electron Integrals
 
-Read the AO-basis [overlap](./input/h2o/STO-3G/s.dat), [kinetic-energy](./input/h2o/STO-3G/t.dat), and [nuclear-attraction integrals](./input/h2o/STO-3G/v.dat). And store them in appropriately constructed matrices. 
+- Step 4: Build the Orthogonalization Matrix
 
-*Note that the one-electron integrals provided include only the *permutationally unique* integrals, but you should store the full matrices for convenience. Note also that the AO indices on the integrals in the files start with `1` rather than `0`.*
+- Step 5: Build the Initial Guess Density
 
-## Step #3: Two-Electron Integrals
+- Step 6: Compute the Inital SCF Energy
 
-Read the two-electron repulsion integrals from the  [eri.dat](./input/h2o/STO-3G/eri.dat)  
-file. The integrals in this file are provided in chemist's notation with the eight-fold permutational symmetry relationships.
+- Step 7: Compute the New Fock Matrix 
 
-
+- Step 8: Build the New Density Matrix 
 <!--
-
-## Step 4: Build the Orthogonalization Matrix
-
-Diagonalize the overlap matrix:
-
-
-
-where L<sub>S</sub> is the matrix of eigenvectors (columns) and &Lambda;<sub>S</sub> is the diagonal matrix of corresponding eigenvalues.
-
-Build the symmetric orthogonalization matrix using:
-
-
-
-where the tilde denotes the matrix transpose.
-
-  * [Hint 1](./hints/hint4-1.md): S<sup>-1/2</sup> Matrix
-
-
 ## Step 5: Build the Initial Guess Density
 
 Form an initial (guess) Fock matrix in the orthonormal AO basis using the core Hamiltonian as a guess:

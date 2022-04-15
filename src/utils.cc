@@ -26,18 +26,6 @@ void print_matrix(const Matrix& mat, std::string title)
     }
 }
 
-Matrix sqrt_inv_matrix(Matrix m)
-{
-    Eigen::SelfAdjointEigenSolver<Matrix> solver(m);
-    Matrix evecs = solver.eigenvectors();
-    Matrix evals = solver.eigenvalues();
-    Matrix evals_inv_sqrt = evals.array().inverse().sqrt();
-
-    Matrix sqrt_matrix = evecs * evals_inv_sqrt.asDiagonal() * evecs.transpose();
-    
-    return sqrt_matrix;
-}
-
 int read_nao_from_file(std::string file_name)
 {   
     // Open the file

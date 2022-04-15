@@ -15,9 +15,8 @@ typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> M
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vector;
 
 void print_matrix(const Matrix& mat, std::string title);
-Matrix sqrt_inv_matrix(Matrix m);
 
-int    read_nao_from_file(std::string file_name);
+int read_nao_from_file(std::string file_name);
 
 Int1e read_int1e_from_file(std::string file_name, int nao);
 Int2e read_int2e_from_file(std::string file_name, int nao);

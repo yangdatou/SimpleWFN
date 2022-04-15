@@ -65,8 +65,8 @@ int main(int argc, char *argv[])
             for (int nu = 0; nu < nao; ++nu) {
                 for (int lm = 0; lm < nao; ++lm) {
                     for (int sg = 0; sg < nao; ++sg) {
-                        eri_mu_nu_lm_sg  = get_int2e_element(eri, mu, nu, lm, sg);
-                        eri_mu_lm_nu_sg  = get_int2e_element(eri, mu, lm, nu, sg);
+                        eri_mu_nu_lm_sg  = get_eri_element(eri, mu, nu, lm, sg);
+                        eri_mu_lm_nu_sg  = get_eri_element(eri, mu, lm, nu, sg);
                         fock(mu, nu)    += dm(lm, sg) * (2 * eri_mu_nu_lm_sg - eri_mu_lm_nu_sg);
                     }
                 }

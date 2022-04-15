@@ -21,4 +21,4 @@ int read_nao_from_file(std::string file_name);
 Int1e read_int1e_from_file(std::string file_name, int nao);
 Int2e read_int2e_from_file(std::string file_name, int nao);
 
-double get_int2e_element(Int2e int2e, int mu, int nu, int lm, int sg);
+double get_eri_element(const Int2e& eri, int mu, int nu, int lm, int sg);

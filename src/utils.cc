@@ -104,10 +104,10 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
     return int2e;
 }
 
-double get_int2e_element(const Int2e& int2e, int mu, int nu, int lm, int sg)
+double get_eri_element(const Int2e& eri, int mu, int nu, int lm, int sg)
 {
     int munu     = INDEX(mu, nu);
     int lmsg     = INDEX(lm, sg);
     int munulmsg = INDEX(munu, lmsg);
-    return int2e(munulmsg);
+    return eri(munulmsg);
 }

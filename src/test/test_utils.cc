@@ -70,14 +70,14 @@ TEST(test_h2o_sto3g) {
         nu = nu - 1;
         lm = lm - 1;
         sg = sg - 1;
-        ASSERT_EQUAL(get_int2e_element(eri, mu, nu, lm, sg), val);
-        ASSERT_EQUAL(get_int2e_element(eri, nu, mu, lm, sg), val);
-        ASSERT_EQUAL(get_int2e_element(eri, mu, nu, sg, lm), val);
-        ASSERT_EQUAL(get_int2e_element(eri, nu, mu, sg, lm), val);
-        ASSERT_EQUAL(get_int2e_element(eri, lm, sg, mu, nu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, lm, sg, nu, mu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, sg, lm, mu, nu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, sg, lm, nu, mu), val);
+        ASSERT_EQUAL(get_eri_element(eri, mu, nu, lm, sg), val);
+        ASSERT_EQUAL(get_eri_element(eri, nu, mu, lm, sg), val);
+        ASSERT_EQUAL(get_eri_element(eri, mu, nu, sg, lm), val);
+        ASSERT_EQUAL(get_eri_element(eri, nu, mu, sg, lm), val);
+        ASSERT_EQUAL(get_eri_element(eri, lm, sg, mu, nu), val);
+        ASSERT_EQUAL(get_eri_element(eri, lm, sg, nu, mu), val);
+        ASSERT_EQUAL(get_eri_element(eri, sg, lm, mu, nu), val);
+        ASSERT_EQUAL(get_eri_element(eri, sg, lm, nu, mu), val);
     }
     input.close();
 }
@@ -151,14 +151,14 @@ TEST(test_h2o_dzp) {
         nu = nu - 1;
         lm = lm - 1;
         sg = sg - 1;
-        ASSERT_EQUAL(get_int2e_element(eri, mu, nu, lm, sg), val);
-        ASSERT_EQUAL(get_int2e_element(eri, nu, mu, lm, sg), val);
-        ASSERT_EQUAL(get_int2e_element(eri, mu, nu, sg, lm), val);
-        ASSERT_EQUAL(get_int2e_element(eri, nu, mu, sg, lm), val);
-        ASSERT_EQUAL(get_int2e_element(eri, lm, sg, mu, nu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, lm, sg, nu, mu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, sg, lm, mu, nu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, sg, lm, nu, mu), val);
+        ASSERT_EQUAL(get_eri_element(eri, mu, nu, lm, sg), val);
+        ASSERT_EQUAL(get_eri_element(eri, nu, mu, lm, sg), val);
+        ASSERT_EQUAL(get_eri_element(eri, mu, nu, sg, lm), val);
+        ASSERT_EQUAL(get_eri_element(eri, nu, mu, sg, lm), val);
+        ASSERT_EQUAL(get_eri_element(eri, lm, sg, mu, nu), val);
+        ASSERT_EQUAL(get_eri_element(eri, lm, sg, nu, mu), val);
+        ASSERT_EQUAL(get_eri_element(eri, sg, lm, mu, nu), val);
+        ASSERT_EQUAL(get_eri_element(eri, sg, lm, nu, mu), val);
     }
     input.close();
 }
@@ -231,14 +231,14 @@ TEST(test_h2o_dz) {
         nu = nu - 1;
         lm = lm - 1;
         sg = sg - 1;
-        ASSERT_EQUAL(get_int2e_element(eri, mu, nu, lm, sg), val);
-        ASSERT_EQUAL(get_int2e_element(eri, nu, mu, lm, sg), val);
-        ASSERT_EQUAL(get_int2e_element(eri, mu, nu, sg, lm), val);
-        ASSERT_EQUAL(get_int2e_element(eri, nu, mu, sg, lm), val);
-        ASSERT_EQUAL(get_int2e_element(eri, lm, sg, mu, nu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, lm, sg, nu, mu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, sg, lm, mu, nu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, sg, lm, nu, mu), val);
+        ASSERT_EQUAL(get_eri_element(eri, mu, nu, lm, sg), val);
+        ASSERT_EQUAL(get_eri_element(eri, nu, mu, lm, sg), val);
+        ASSERT_EQUAL(get_eri_element(eri, mu, nu, sg, lm), val);
+        ASSERT_EQUAL(get_eri_element(eri, nu, mu, sg, lm), val);
+        ASSERT_EQUAL(get_eri_element(eri, lm, sg, mu, nu), val);
+        ASSERT_EQUAL(get_eri_element(eri, lm, sg, nu, mu), val);
+        ASSERT_EQUAL(get_eri_element(eri, sg, lm, mu, nu), val);
+        ASSERT_EQUAL(get_eri_element(eri, sg, lm, nu, mu), val);
     }
     input.close();
 }
@@ -311,14 +311,14 @@ TEST(test_ch4_sto3g) {
         nu = nu - 1;
         lm = lm - 1;
         sg = sg - 1;
-        ASSERT_EQUAL(get_int2e_element(eri, mu, nu, lm, sg), val);
-        ASSERT_EQUAL(get_int2e_element(eri, nu, mu, lm, sg), val);
-        ASSERT_EQUAL(get_int2e_element(eri, mu, nu, sg, lm), val);
-        ASSERT_EQUAL(get_int2e_element(eri, nu, mu, sg, lm), val);
-        ASSERT_EQUAL(get_int2e_element(eri, lm, sg, mu, nu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, lm, sg, nu, mu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, sg, lm, mu, nu), val);
-        ASSERT_EQUAL(get_int2e_element(eri, sg, lm, nu, mu), val);
+        ASSERT_EQUAL(get_eri_element(eri, mu, nu, lm, sg), val);
+        ASSERT_EQUAL(get_eri_element(eri, nu, mu, lm, sg), val);
+        ASSERT_EQUAL(get_eri_element(eri, mu, nu, sg, lm), val);
+        ASSERT_EQUAL(get_eri_element(eri, nu, mu, sg, lm), val);
+        ASSERT_EQUAL(get_eri_element(eri, lm, sg, mu, nu), val);
+        ASSERT_EQUAL(get_eri_element(eri, lm, sg, nu, mu), val);
+        ASSERT_EQUAL(get_eri_element(eri, sg, lm, mu, nu), val);
+        ASSERT_EQUAL(get_eri_element(eri, sg, lm, nu, mu), val);
     }
     input.close();
 }

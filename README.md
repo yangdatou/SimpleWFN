@@ -3,7 +3,7 @@ This project closely follows [ProgrammingProjects](https://github.com/CrawfordGr
 The purpose of this project is to practice fundamental C++ programming techniques in the context of electronic structure problems and to provide a deeper
 understanding of Hartree-Fock theory and post-HF algorithms.
 
-## Hartree-Fock Theory
+## Restricted Hartree-Fock Theory
 The theoretical background can be found in Ch. 3 of the text by Szabo and Ostlund or in the 
 [nice set of on-line notes](http://vergil.chemistry.gatech.edu/notes/hf-intro/hf-intro.html) written by David Sherrill.
 

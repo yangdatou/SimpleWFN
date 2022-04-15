@@ -93,8 +93,8 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
         nu = nu - 1;
         lm = lm - 1;
         sg = sg - 1;
-        munu = INDEX(mu, nu);
-        lmsg = INDEX(lm, sg);
+        munu     = INDEX(mu, nu);
+        lmsg     = INDEX(lm, sg);
         munulmsg = INDEX(munu, lmsg);
         int2e(munulmsg) = val;
     }
@@ -104,7 +104,7 @@ Int2e read_int2e_from_file(std::string file_name, int nao)
     return int2e;
 }
 
-double get_int2e_element(const Int2e int2e, int mu, int nu, int lm, int sg)
+double get_int2e_element(const Int2e& int2e, int mu, int nu, int lm, int sg)
 {
     int munu     = INDEX(mu, nu);
     int lmsg     = INDEX(lm, sg);

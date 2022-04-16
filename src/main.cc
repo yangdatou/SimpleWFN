@@ -11,6 +11,9 @@
 
 #include "utils.h"
 
+const double   TOL = 1e-8;
+const int MAX_ITER = 100;
+
 int main(int argc, char *argv[])
 {
     std::string path{argv[1]}; 
@@ -24,19 +27,21 @@ int main(int argc, char *argv[])
     int nao      = read_nao_from_file(path + "s.dat");
     int nocc     = nelec_alpha; // restricted hartree fock
 
-    Int1e s1e   = read_int1e_from_file(path + "s.dat", nao);
-    Int1e t1e   = read_int1e_from_file(path + "t.dat", nao);
-    Int1e v1e   = read_int1e_from_file(path + "v.dat", nao);
-    Int1e h1e   = t1e + v1e;
-    Int2e eri   = read_int2e_from_file(path + "eri.dat", nao);
+    Int1eAO s1e    = read_int1e_ao_from_file(path + "s.dat", nao);
+    Int1eAO t1e    = read_int1e_ao_from_file(path + "t.dat", nao);
+    Int1eAO v1e    = read_int1e_ao_from_file(path + "v.dat", nao);
+    Int1eAO h1e    = t1e + v1e;
+    Int2eAO eri_ao = read_int2e_ao_from_file(path + "eri.dat", nao);
     
     Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> solver;
-    Matrix mo_coeff ;
-    Matrix mo_energy;
-    Matrix orbo;
-    Matrix orbv;
-    Matrix dm;
-    Matrix fock;
+    MOCoeff  mo_coeff ;
+    MOEnergy mo_energy;
+
+    MOCoeff orbo;
+    MOCoeff orbv;
+
+    DensityMatrixAO dm;
+    Int1eAO       fock;
 
     solver.compute(h1e, s1e);
     mo_coeff   = solver.eigenvectors();
@@ -48,7 +53,7 @@ int main(int argc, char *argv[])
 
     dm  = orbo * orbo.transpose();
 
-    int iter = 0;
+    int    iter = 0;
     double cur_energy = 0.0;
     double pre_energy = 0.0;
     double err_energy = 1.0;
@@ -65,8 +70,8 @@ int main(int argc, char *argv[])
             for (int nu = 0; nu < nao; ++nu) {
                 for (int lm = 0; lm < nao; ++lm) {
                     for (int sg = 0; sg < nao; ++sg) {
-                        eri_mu_nu_lm_sg  = get_eri_element(eri, mu, nu, lm, sg);
-                        eri_mu_lm_nu_sg  = get_eri_element(eri, mu, lm, nu, sg);
+                        eri_mu_nu_lm_sg  = get_eri_ao_element(eri_ao, mu, nu, lm, sg);
+                        eri_mu_lm_nu_sg  = get_eri_ao_element(eri_ao, mu, lm, nu, sg);
                         fock(mu, nu)    += dm(lm, sg) * (2 * eri_mu_nu_lm_sg - eri_mu_lm_nu_sg);
                     }
                 }
@@ -82,19 +87,18 @@ int main(int argc, char *argv[])
         dm   = orbo * orbo.transpose();
 
         cur_energy = (dm * (h1e + fock)).trace();
-
-        is_converged = (err_energy < 1.0e-8);
-        is_max_iter  = (iter > 100);
-
         err_energy = std::abs(cur_energy - pre_energy);
+
+        is_converged = (err_energy < TOL);
+        is_max_iter  = (iter > MAX_ITER);
+
         printf("iter = % 3d, elec_energy = %.12f, err_energy = % 6.4e\n", iter, cur_energy, err_energy);
 
         pre_energy = cur_energy;
         iter += 1;
-
     }
 
-    Int2e eri_mo = make_eri_mo(eri, mo_coeff);
+    Int2eMO eri_mo = make_eri_mo(eri_ao, mo_coeff);
 
     double e_mp2 = 0.0;
 
@@ -105,8 +109,8 @@ int main(int argc, char *argv[])
         for(int a = nocc; a < nmo; ++a){
             for(int j = 0; j < nocc; ++j){
                 for(int b = nocc; b < nmo; ++b){
-                    eri_iajb = get_eri_element(eri_mo, i, a, j, b);
-                    eri_ibja = get_eri_element(eri_mo, i, b, j, a);
+                    eri_iajb = get_eri_mo_element(eri_mo, i, a, j, b);
+                    eri_ibja = get_eri_mo_element(eri_mo, i, b, j, a);
                     e_mp2 += eri_iajb * (2 * eri_iajb - eri_ibja) / (mo_energy(i) + mo_energy(j) - mo_energy(a) - mo_energy(b));
                 }
             }

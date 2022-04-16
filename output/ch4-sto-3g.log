@@ -14,5 +14,4 @@ iter =  10, elec_energy = -53.224154610801, err_energy =  1.1920e-06
 iter =  11, elec_energy = -53.224154818281, err_energy =  2.0748e-07
 iter =  12, elec_energy = -53.224154780986, err_energy =  3.7295e-08
 iter =  13, elec_energy = -53.224154787392, err_energy =  6.4062e-09
-iter =  14, elec_energy = -53.224154786219, err_energy =  1.1730e-09
-MP2 energy = -0.056046676165
+MP2 energy = -0.056046676166

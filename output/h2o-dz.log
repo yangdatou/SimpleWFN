@@ -66,5 +66,4 @@ iter =  62, elec_energy = -83.980246026237, err_energy =  2.6439e-08
 iter =  63, elec_energy = -83.980246044927, err_energy =  1.8690e-08
 iter =  64, elec_energy = -83.980246031715, err_energy =  1.3212e-08
 iter =  65, elec_energy = -83.980246041054, err_energy =  9.3397e-09
-iter =  66, elec_energy = -83.980246034452, err_energy =  6.6023e-09
-MP2 energy = -0.152709879086
+MP2 energy = -0.152709879060

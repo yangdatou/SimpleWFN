@@ -94,5 +94,26 @@ int main(int argc, char *argv[])
 
     }
 
+    Int2e eri_mo = make_eri_mo(eri, mo_coeff);
+
+    double e_mp2 = 0.0;
+
+    double eri_iajb = 0.0;
+    double eri_ibja = 0.0;
+    
+    for(int i = 0; i < nocc; ++i){
+        for(int a = nocc; a < nmo; ++a){
+            for(int j = 0; j < nocc; ++j){
+                for(int b = nocc; b < nmo; ++b){
+                    eri_iajb = get_eri_element(eri_mo, i, a, j, b);
+                    eri_ibja = get_eri_element(eri_mo, i, b, j, a);
+                    e_mp2 += eri_iajb * (2 * eri_iajb - eri_ibja) / (mo_energy(i) + mo_energy(j) - mo_energy(a) - mo_energy(b));
+                }
+            }
+        }
+    }
+
+    printf("MP2 energy = %.12f\n", e_mp2);
+
     return 0;
 }

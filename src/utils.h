@@ -22,3 +22,5 @@ Int1e read_int1e_from_file(std::string file_name, int nao);
 Int2e read_int2e_from_file(std::string file_name, int nao);
 
 double get_eri_element(const Int2e& eri, int mu, int nu, int lm, int sg);
+
+Int2e  make_eri_mo(const Int2e& eri, Matrix mo_coeff);

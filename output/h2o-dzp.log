@@ -58,10 +58,4 @@ iter =  54, elec_energy = -84.011188757903, err_energy =  2.3573e-07
 iter =  55, elec_energy = -84.011188922173, err_energy =  1.6427e-07
 iter =  56, elec_energy = -84.011188807700, err_energy =  1.1447e-07
 iter =  57, elec_energy = -84.011188887471, err_energy =  7.9771e-08
-iter =  58, elec_energy = -84.011188831882, err_energy =  5.5589e-08
-iter =  59, elec_energy = -84.011188870620, err_energy =  3.8738e-08
-iter =  60, elec_energy = -84.011188843625, err_energy =  2.6995e-08
-iter =  61, elec_energy = -84.011188862437, err_energy =  1.8812e-08
-iter =  62, elec_energy = -84.011188849328, err_energy =  1.3109e-08
-iter =  63, elec_energy = -84.011188858463, err_energy =  9.1353e-09
-iter =  64, elec_energy = -84.011188852097, err_energy =  6.3660e-09
+iter =  58, elec_energy = -84.011188831882, err_energy =  5.55

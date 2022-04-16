@@ -23,3 +23,4 @@ iter =  19, elec_energy = -82.944447011086, err_energy =  2.2613e-08
 iter =  20, elec_energy = -82.944447000175, err_energy =  1.0911e-08
 iter =  21, elec_energy = -82.944446994911, err_energy =  5.2646e-09
 iter =  22, elec_energy = -82.944446992371, err_energy =  2.5402e-09
+MP2 energy = -0.049149636362

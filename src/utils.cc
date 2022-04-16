@@ -111,3 +111,47 @@ double get_eri_element(const Int2e& eri, int mu, int nu, int lm, int sg)
     int munulmsg = INDEX(munu, lmsg);
     return eri(munulmsg);
 }
+
+// transform the ERI from the AO basis to the MO basis
+// the MO basis is given by the `mo_coeff` matrix.
+// The algorithm shall be improved from nao**5 to nao**4
+// by doing the summation step by step.
+// https://github.com/CrawfordGroup/ProgrammingProjects/blob/master/Project%2304/hints/hint2.md
+Int2e  make_eri_mo(const Int2e& eri, Matrix mo_coeff)
+{
+    int nao = mo_coeff.rows();
+    int nmo = mo_coeff.cols();
+
+    int npair = nmo * (nmo + 1) / 2;
+    int neri  = npair * (npair + 1) / 2;
+
+    double eri_mu_nu_lm_sg;
+
+    Int2e int2e(neri);
+    int2e << Int2e::Zero(neri);
+
+    int p, q, r, s, pqrs;
+
+    pqrs = 0;
+    for (p = 0; p < nmo; ++p) {
+        for (q = 0; q <= p; ++q) {
+            for (r = 0; r <= p; ++r) {
+                for(s = 0; s <= (p==r ? q : r); s++) {
+                    for (int mu = 0; mu < nao; ++mu) {
+                        for (int nu = 0; nu < nao; ++nu){
+                            for (int lm = 0; lm < nao; ++lm) {
+                                for (int sg = 0; sg < nao; ++sg) {
+                                    eri_mu_nu_lm_sg = get_eri_element(eri, mu, nu, lm, sg);
+                                    int2e(pqrs) += eri_mu_nu_lm_sg * mo_coeff(mu, p) * mo_coeff(nu, q) * mo_coeff(lm, r) * mo_coeff(sg, s);
+                                }
+                            }
+                        }
+                    }
+                pqrs += 1;
+                }
+            }
+        }
+    }
+                                
+    return int2e;
+}

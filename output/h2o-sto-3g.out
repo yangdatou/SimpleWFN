@@ -1,0 +1,27 @@
+nelec_alpha = 5
+nelec_beta  = 5
+iter =   0, elec_energy = -78.28658328, err_energy =  7.8287e+01
+iter =   1, elec_energy = -84.04831625, err_energy =  5.7617e+00
+iter =   2, elec_energy = -82.71696596, err_energy =  1.3314e+00
+iter =   3, elec_energy = -82.98714076, err_energy =  2.7017e-01
+iter =   4, elec_energy = -82.93813319, err_energy =  4.9008e-02
+iter =   5, elec_energy = -82.94627108, err_energy =  8.1379e-03
+iter =   6, elec_energy = -82.94448678, err_energy =  1.7843e-03
+iter =   7, elec_energy = -82.94461725, err_energy =  1.3047e-04
+iter =   8, elec_energy = -82.94450350, err_energy =  1.1375e-04
+iter =   9, elec_energy = -82.94447893, err_energy =  2.4570e-05
+iter =  10, elec_energy = -82.94446163, err_energy =  1.7303e-05
+iter =  11, elec_energy = -82.94445420, err_energy =  7.4293e-06
+iter =  12, elec_energy = -82.94445045, err_energy =  3.7533e-06
+iter =  13, elec_energy = -82.94444866, err_energy =  1.7834e-06
+iter =  14, elec_energy = -82.94444780, err_energy =  8.6576e-07
+iter =  15, elec_energy = -82.94444738, err_energy =  4.1691e-07
+iter =  16, elec_energy = -82.94444718, err_energy =  2.0133e-07
+iter =  17, elec_energy = -82.94444708, err_energy =  9.7120e-08
+iter =  18, elec_energy = -82.94444703, err_energy =  4.6866e-08
+iter =  19, elec_energy = -82.94444701, err_energy =  2.2613e-08
+iter =  20, elec_energy = -82.94444700, err_energy =  1.0911e-08
+iter =  21, elec_energy = -82.94444699, err_energy =  5.2646e-09
+SCF converged!
+SCF energy = -82.94444699
+MP2 energy =  -0.04914964

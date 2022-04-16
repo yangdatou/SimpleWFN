@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
     int    iter = 0;
     double cur_energy = 0.0;
     double pre_energy = 0.0;
+    double e_scf      = 0.0;
     double err_energy = 1.0;
     double eri_mu_nu_lm_sg, eri_mu_lm_nu_sg;
 
@@ -92,10 +93,19 @@ int main(int argc, char *argv[])
         is_converged = (err_energy < TOL);
         is_max_iter  = (iter > MAX_ITER);
 
-        printf("iter = % 3d, elec_energy = %.12f, err_energy = % 6.4e\n", iter, cur_energy, err_energy);
+        printf("iter = % 3d, elec_energy = % 12.8f, err_energy = % 6.4e\n", iter, cur_energy, err_energy);
 
         pre_energy = cur_energy;
         iter += 1;
+    }
+
+    if (is_converged) {
+        printf("SCF converged!\n");
+        e_scf = cur_energy;
+        printf("SCF energy = % 12.8f\n", e_scf);
+    } else {
+        printf("SCF not converged!\n");
+        exit(1);
     }
 
     Int2eMO eri_mo = make_eri_mo(eri_ao, mo_coeff);
@@ -117,7 +127,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    printf("MP2 energy = %.12f\n", e_mp2);
+    printf("MP2 energy = % 12.8f\n", e_mp2);
 
     return 0;
 }

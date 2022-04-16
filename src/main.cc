@@ -108,7 +108,8 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    Int2eMO eri_mo = make_eri_mo(eri_ao, mo_coeff);
+    Int1eMO fock_mo = mo_coeff.transpose() * fock * mo_coeff;
+    Int2eMO eri_mo  = make_eri_mo(eri_ao, mo_coeff);
 
     double e_mp2 = 0.0;
 
@@ -128,6 +129,43 @@ int main(int argc, char *argv[])
     }
 
     printf("MP2 energy = % 12.8f\n", e_mp2);
+
+    // TODO: CCSD equations
+    // Ref: 
+    // (1) J. Chem. Phys. 94, 4334 (1991); https://doi.org/10.1063/1.460620
+    // Eqs. (1)-(13)
+    // (2) J. Chem. Phys. 120, 2581 (2004); https://doi.org/10.1063/1.1637577
+    // Eqs. (35)-(36)
+    // (3) PySCF: https://github.com/pyscf/pyscf/blob/fa7a73bbed25fca45c25db28bf41cc9ec556bd97/pyscf/cc/rccsd.py#L43
+
+    // d_vo   = fock_mo(i, i) - fock_mo(a, a);
+    // LLT d_vo_solver{d_vo};
+    // d_oovv = fock_mo(i, i) + fock_mo(j, j) - fock_mo(a, a) + fock_mo(b, b);
+    // LLT d_oovv_solver{d_oovv};
+
+    // cur_tvo, cur_tvvoo;
+    // pre_tvo, pre_tvvoo;
+
+    // while (not is_converged and not is_max_iter){
+    //     tau1_vvoo = make_tau1_vvoo(...);
+    //     tau2_vvoo = make_tau2_vvoo(...);
+
+    //     fvv_imds = make_ccsd_fvv_imds(...);
+    //     foo_imds = make_ccsd_foo_imds(...)
+    //     fov_imds = make_ccsd_fov_imds(...)
+    //     woooo_imds = make_ccsd_woooo_imds(...)
+    //     wvvvv_imds = make_ccsd_wovvo_imds(...)
+    //     wovvo_imds = make_ccsd_wovvo_imds(...)
+
+    //     rhs_vo   = make_ccsd_rhs_vo(...)
+    //     rhs_vvoo = make_ccsd_rhs_vvoo(...)
+
+    //     pre_tvo   = cur_tvo;
+    //     pre_tvvoo = cur_tvvoo;
+    
+    //     cur_tvo  = d_vo_solver.solve(rhs_vo);
+    //     cur_vvoo = d_oovv_solver.solve(rhs_vvoo);
+    //     }
 
     return 0;
 }

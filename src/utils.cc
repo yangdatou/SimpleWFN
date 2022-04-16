@@ -76,8 +76,8 @@ Int2eAO read_int2e_ao_from_file(std::string file_name, int nao)
     std::ifstream input{file_name};
     assert(input.good());
 
-    int npair = nao * (nao + 1) / 2;
-    int neri  = npair * (npair + 1) / 2;
+    int npair_ao = nao * (nao + 1) / 2;
+    int neri_ao  = npair_ao * (npair_ao + 1) / 2;
 
     double val;
     int mu, nu, lm, sg; 
@@ -85,8 +85,8 @@ Int2eAO read_int2e_ao_from_file(std::string file_name, int nao)
     int lmsg;
     int munulmsg;
 
-    Int2eAO int2e_ao(neri);
-    int2e_ao << Int2eAO::Zero(neri);
+    Int2eAO int2e_ao(neri_ao);
+    int2e_ao << Int2eAO::Zero(neri_ao);
 
     while (input >> mu >> nu >> lm >> sg >> val) {
         mu = mu - 1;
@@ -120,12 +120,6 @@ double get_eri_mo_element(const Int2eMO& eri_mo, int p, int q, int r, int s)
     return eri_mo(pqrs);
 }
 
-
-// transform the ERI from the AO basis to the MO basis
-// the MO basis is given by the `mo_coeff` matrix.
-// The algorithm shall be improved from nao**5 to nao**4
-// by doing the summation step by step.
-// https://github.com/CrawfordGroup/ProgrammingProjects/blob/master/Project%2304/hints/hint2.md
 Int2eMO make_eri_mo(const Int2eAO& eri_ao, MOCoeff mo_coeff)
 {   
     int p, q, r, s;
@@ -136,7 +130,7 @@ Int2eMO make_eri_mo(const Int2eAO& eri_ao, MOCoeff mo_coeff)
 
     int nao   = mo_coeff.rows();
     int nmo   = mo_coeff.cols();
-    
+
     int npair_ao = nao * (nao + 1) / 2;
     int npair_mo = nmo * (nmo + 1) / 2;
     int neri_mo  = npair_mo * (npair_mo + 1) / 2;

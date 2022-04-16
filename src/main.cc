@@ -139,12 +139,13 @@ int main(int argc, char *argv[])
     // (3) PySCF: https://github.com/pyscf/pyscf/blob/fa7a73bbed25fca45c25db28bf41cc9ec556bd97/pyscf/cc/rccsd.py#L43
 
     // d_vo   = fock_mo(i, i) - fock_mo(a, a);
-    // LLT d_vo_solver{d_vo};
     // d_oovv = fock_mo(i, i) + fock_mo(j, j) - fock_mo(a, a) + fock_mo(b, b);
-    // LLT d_oovv_solver{d_oovv};
 
     // cur_tvo, cur_tvvoo;
     // pre_tvo, pre_tvvoo;
+
+    // CCSDProblem ccsd;
+    // Hold fock_mo, eri_mo, d_vo, d_oovv;
 
     // while (not is_converged and not is_max_iter){
     //     tau1_vvoo = make_tau1_vvoo(...);
@@ -158,13 +159,13 @@ int main(int argc, char *argv[])
     //     wovvo_imds = make_ccsd_wovvo_imds(...)
 
     //     rhs_vo   = make_ccsd_rhs_vo(...)
-    //     rhs_vvoo = make_ccsd_rhs_vvoo(...)
+    //     rhs_vvoo = make_ccsd_rhs_vvoo(...) and rhs_vvoo = make_cc2_rhs_vvoo(...)
 
     //     pre_tvo   = cur_tvo;
     //     pre_tvvoo = cur_tvvoo;
     
-    //     cur_tvo  = d_vo_solver.solve(rhs_vo);
-    //     cur_vvoo = d_oovv_solver.solve(rhs_vvoo);
+    //     cur_tvo  = rhs_vo / d_vo;
+    //     cur_vvoo = rhs_vvoo / d_oovv;
     //     }
 
     return 0;

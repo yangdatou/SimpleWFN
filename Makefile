@@ -7,7 +7,7 @@ EIGEN_INCLUDE     ?= /Users/yangjunjie/Downloads/eigen-3.4.0
 # Set compiler
 CXX      ?= g++
 # Set c++ compiler flags
-CXXFLAGS ?= -Wall -Werror -Wno-sign-compare -Wno-comment -std=c++11 -O3 -I $(EIGEN_INCLUDE) -framework Accelerate
+CXXFLAGS ?= -Wall -Werror -Wno-sign-compare -Wno-comment -std=c++11 -O3 -I $(EIGEN_INCLUDE)
 
 # Run the tests
 test: main test_utils
@@ -23,12 +23,14 @@ test: main test_utils
 	rm ./output/tmp.out
 
 # Compile the main executable
-main: ./src/main.cc ./src/utils.cc
+main: ./src/main.cc ./bin/utils.o
 	$(CXX) $(CXXFLAGS) -o ./bin/main.x $^
 
-# Compile the main executable
-test_utils: ./src/test/test_utils.cc ./src/utils.cc
+test_utils: ./src/test/test_utils.cc ./bin/utils.o
 	$(CXX) $(CXXFLAGS) -o ./bin/test_utils.x $^
+
+./bin/utils.o: ./src/utils.cc
+	$(CXX) $(CXXFLAGS) -o ./bin/utils.o -c $^
 
 # Remove automatically generated files
 clean :

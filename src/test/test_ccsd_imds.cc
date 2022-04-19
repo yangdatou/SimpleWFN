@@ -1,12 +1,13 @@
-#include "unit_test_tools.h"
+// #include "unit_test_tools.h"
 
 #include "../ccsd_imds.h"
 
 #define MAX_ITER 100
-#define TOL 1e-8
+#define TOL      1e-8
 
-TEST(test_h2o_sto3g) {
-
+// TEST(test_h2o_sto3g) {
+int main()
+{
     std::string path{"./input/h2o/STO-3G/"};
     int nelec_alpha = 5;
     int nelec_beta  = 5;
@@ -103,9 +104,6 @@ TEST(test_h2o_sto3g) {
     Int1eMO fock_mo = mo_coeff.transpose() * fock * mo_coeff;
     Int2eMO eri_mo  = make_eri_mo(eri_ao, mo_coeff);
 
-    print_matrix(mo_coeff, "mo_coeff");
-    print_matrix(fock_mo, "fock_mo");
-
     OV   t1(nocc, nvir);
     t1 << OV::Zero(nocc, nvir);
     OOVV t2 = OOVV(nocc, nvir);
@@ -122,32 +120,32 @@ TEST(test_h2o_sto3g) {
                 for(int b = nocc; b < nmo; ++b){
                     eri_iajb = get_eri_mo_element(eri_mo, i, a, j, b);
                     eri_ibja = get_eri_mo_element(eri_mo, i, b, j, a);
-                    t2_ijab = (2 * eri_iajb - eri_ibja) / (mo_energy(i) + mo_energy(j) - mo_energy(a) - mo_energy(b));
-                    e_mp2 += t2_ijab * eri_iajb;
+                    t2_ijab  =  eri_iajb / (mo_energy(i) + mo_energy(j) - mo_energy(a) - mo_energy(b));
+                    e_mp2   += t2_ijab * (2 * eri_iajb - eri_ibja);
                     t2.set_element(i, j, a, b, t2_ijab);
                 }
             }
         }
     }
 
-    // e_mp2 *= 0.25;
-
     printf("MP2 energy = % 12.8f\n", e_mp2);
 
-    print_matrix(t1, "t1");
-    for (int i = 0; i < nocc; ++i) {
-        for (int j = 0; j < nocc; ++j) {
-            for (int a = nocc; a < nmo; ++a) {
-                for (int b = nocc; b < nmo; ++b) {
-                    t2_ijab = t2.get_element(i, j, a, b);
-                    printf("- t2(%d, %d, %d, %d) = % 12.8f\n", i, j, a, b, t2_ijab);
-                }
-            }
-        }
-    }
-
     auto foo = make_imds_foo(t1, t2, fock_mo, eri_mo);
-    // print_matrix(foo, "foo");
+    print_matrix(foo, "foo");
+    
+    auto fvv = make_imds_fvv(t1, t2, fock_mo, eri_mo);
+    print_matrix(fvv, "fvv");
+
+    auto fov = make_imds_fov(t1, t2, fock_mo, eri_mo);
+    print_matrix(fov, "fov");
+
+    auto loo = make_imds_loo(t1, t2, fock_mo, eri_mo);
+    print_matrix(loo, "loo");
+
+    auto lvv = make_imds_lvv(t1, t2, fock_mo, eri_mo);
+    print_matrix(lvv, "lvv");
+
+    return 0;
 }
 
-TEST_MAIN()
+// TEST_MAIN()

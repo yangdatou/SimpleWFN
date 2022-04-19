@@ -7,7 +7,7 @@ EIGEN_INCLUDE     ?= /Users/yangjunjie/Downloads/eigen-3.4.0
 # Set compiler
 CXX      ?= g++
 # Set c++ compiler flags
-CXXFLAGS ?= -Wall -Werror -Wno-sign-compare -Wno-comment -std=c++11 -O3 -I $(EIGEN_INCLUDE)
+CXXFLAGS ?= -Wall -Werror -Wno-sign-compare -Wno-comment -std=c++11 -O0 -g -I $(EIGEN_INCLUDE)
 
 # Run the tests
 test: main test_utils

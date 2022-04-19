@@ -268,7 +268,7 @@ OOOO make_imds_woooo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
         FOR_OCC(k, nocc, nvir) {
             FOR_OCC(j, nocc, nvir) {
                 FOR_OCC(i, nocc, nvir) {
-                    w_klij = 0.0;
+                    w_klij = get_eri_mo_element(eri_mo, k, i, l, j);
 
                     FOR_VIR(c, nocc, nvir) {
                         eri_lcki = get_eri_mo_element(eri_mo, l, c, k, i);
@@ -295,7 +295,6 @@ OOOO make_imds_woooo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
                         }
                     }
 
-                    w_klij += get_eri_mo_element(eri_mo, k, i, l, j);
                     wijkl.set_element(k, l, i, j, w_klij);
                 }
             }
@@ -327,7 +326,7 @@ VVVV make_imds_wvvvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
         FOR_VIR(b, nocc, nvir) {
             FOR_VIR(c, nocc, nvir) {
                 FOR_VIR(d, nocc, nvir) {
-                    w_abcd = 0.0;
+                    w_abcd = get_eri_mo_element(eri_mo, a, c, b, d);
 
                     FOR_OCC(k, nocc, nvir) {
                         eri_kdac = get_eri_mo_element(eri_mo, k, d, a, c);
@@ -340,7 +339,6 @@ VVVV make_imds_wvvvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
                         w_abcd  -= eri_kcbd * t1_ka;
                     }
 
-                    w_abcd += get_eri_mo_element(eri_mo, a, c, b, d);
                     wabcd.set_element(a, b, c, d, w_abcd);
                 }
             }
@@ -377,7 +375,7 @@ VOOV make_imds_wvoov(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
         FOR_OCC(k, nocc, nvir) {
             FOR_OCC(i, nocc, nvir) {
                 FOR_VIR(c, nocc, nvir) {
-                    w_akic = 0.0;
+                    w_akic = get_eri_mo_element(eri_mo, i, a, c, k);
 
                         FOR_OCC(l, nocc, nvir) {
                             FOR_VIR(d, nocc, nvir) {
@@ -405,7 +403,6 @@ VOOV make_imds_wvoov(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
                             }
                         }
 
-                    w_akic += get_eri_mo_element(eri_mo, i, a, c, k);
                     wakic.set_element(a, k, i, c, w_akic);
                 }
             }
@@ -441,7 +438,42 @@ VOVO make_imds_wvovo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
     double eri_kdac = 0.0; // ovvv
     double eri_lcki = 0.0; // ovoo
     double eri_lckd = 0.0; // ovov
-    double eri_caik = 0.0; // ovov
 
     double w_akci   = 0.0;
+
+    VirIndex a, c, d;
+    OccIndex k, i, l;
+
+    FOR_VIR(a, nocc, nvir) {
+        FOR_OCC(k, nocc, nvir) {
+            FOR_VIR (c, nocc, nvir) {
+                FOR_OCC (i, nocc, nvir) {
+                    w_akci = get_eri_mo_element(eri_mo, c, a, i, k);
+
+                    FOR_OCC (l, nocc, nvir) {
+                        FOR_VIR (d, nocc, nvir) {
+                            eri_kdac = get_eri_ao_element(eri_mo, k, d, a, c);
+                            eri_lcki = get_eri_ao_element(eri_mo, l, c, i, k);
+                            eri_lckd = get_eri_ao_element(eri_mo, l, c, k, d);
+
+                            t2_ilda  = t2.get_element(i, l, d, a);
+
+                            t1_id    = t1(i, d - nocc);
+                            t1_la    = t1(l, a - nocc);
+
+                            w_akci  += eri_kdac * t1_id;
+                            w_akci  -= eri_lcki * t1_la;
+
+                            w_akci  -= 0.5 * eri_lckd * t2_ilda;
+                            w_akci  -= eri_lckd * t1_id * t1_la;
+                        }
+                    }
+
+                    wakci.set_element(a, k, c, i, w_akci);
+                }
+            }
+        }
+    }
+
+    return wakci;
 }

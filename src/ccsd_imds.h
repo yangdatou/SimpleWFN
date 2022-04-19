@@ -175,3 +175,4 @@ VV make_imds_lvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2e
 OOOO make_imds_woooo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);
 VVVV make_imds_wvvvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);
 VOOV make_imds_wvoov(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);
+VOVO make_imds_wvovo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);

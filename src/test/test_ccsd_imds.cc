@@ -130,64 +130,31 @@ int main()
 
     printf("MP2 energy = % 12.8f\n", e_mp2);
 
-    auto foo = make_imds_foo(t1, t2, fock_mo, eri_mo);
-    print_matrix(foo, "foo");
-    
-    auto fvv = make_imds_fvv(t1, t2, fock_mo, eri_mo);
-    print_matrix(fvv, "fvv");
+    OV*   t1cur = &t1;
+    OOVV* t2cur = &t2;
 
-    auto fov = make_imds_fov(t1, t2, fock_mo, eri_mo);
-    print_matrix(fov, "fov");
+    // OV*   t1pre = &t1;
+    // OOVV* t2pre = &t2;
 
-    auto loo = make_imds_loo(t1, t2, fock_mo, eri_mo);
-    print_matrix(loo, "loo");
+    is_converged = false;
+    is_max_iter  = false;
 
-    auto lvv = make_imds_lvv(t1, t2, fock_mo, eri_mo);
-    print_matrix(lvv, "lvv");
+    while (not is_converged and not is_max_iter) {
+        auto foo   = make_imds_foo(*t1cur, *t2cur, fock_mo, eri_mo);
+        auto fvv   = make_imds_fvv(*t1cur, *t2cur, fock_mo, eri_mo);
+        auto fov   = make_imds_fov(*t1cur, *t2cur, fock_mo, eri_mo);
+        auto loo   = make_imds_loo(*t1cur, *t2cur, fock_mo, eri_mo);
+        auto lvv   = make_imds_lvv(*t1cur, *t2cur, fock_mo, eri_mo);
 
-    auto woooo = make_imds_woooo(t1, t2, fock_mo, eri_mo);
+        auto woooo = make_imds_woooo(*t1cur, *t2cur, fock_mo, eri_mo);
+        auto wvvvv = make_imds_wvvvv(*t1cur, *t2cur, fock_mo, eri_mo);
+        auto wvoov = make_imds_wvoov(*t1cur, *t2cur, fock_mo, eri_mo);
+        auto wvovo = make_imds_wvovo(*t1cur, *t2cur, fock_mo, eri_mo);
 
-    // OccIndex i, j, k, l;
-
-    // FOR_OCC(i, nocc, nvir) {
-    //     FOR_OCC(j, nocc, nvir) {
-    //         FOR_OCC(k, nocc, nvir) {
-    //             FOR_OCC(l, nocc, nvir) {
-    //                 printf("- %d, %d, %d, %d, % 8.6f\n", i, j, k, l, woooo.get_element(i, j, k, l));
-    //             }
-    //         }
-    //     }
-    // }
-
-    auto wvvvv = make_imds_wvvvv(t1, t2, fock_mo, eri_mo);
-
-    // VirIndex a, b, c, d;
-
-    // FOR_VIR(a, nocc, nvir) {
-    //     FOR_VIR(b, nocc, nvir) {
-    //         FOR_VIR(c, nocc, nvir) {
-    //             FOR_VIR(d, nocc, nvir) {
-    //                 printf("- %d, %d, %d, %d, % 8.6f\n", a, b, c, d, wvvvv.get_element(a, b, c, d));
-    //             }
-    //         }
-    //     }
-    // }
-
-    auto wvoov = make_imds_wvoov(t1, t2, fock_mo, eri_mo);
-
-    VirIndex a, b;
-    OccIndex i, j;
-
-    FOR_VIR(a, nocc, nvir) {
-        FOR_VIR(b, nocc, nvir) {
-            FOR_OCC(i, nocc, nvir) {
-                FOR_OCC(j, nocc, nvir) {
-                    printf("- %d, %d, %d, %d, % 8.6f\n", a, i, j, b, wvoov.get_element(a, i, j, b));
-                }
-            }
-        }
+        is_converged = true;
+        is_max_iter  = true;
     }
-
+    
     return 0;
 }
 

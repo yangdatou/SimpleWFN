@@ -145,6 +145,20 @@ int main()
     auto lvv = make_imds_lvv(t1, t2, fock_mo, eri_mo);
     print_matrix(lvv, "lvv");
 
+    auto woooo = make_imds_woooo(t1, t2, fock_mo, eri_mo);
+
+    OccIndex i, j, k, l;
+
+    FOR_OCC(i, nocc, nvir) {
+        FOR_OCC(j, nocc, nvir) {
+            FOR_OCC(k, nocc, nvir) {
+                FOR_OCC(l, nocc, nvir) {
+                    printf("- %d, %d, %d, %d, % 8.6f\n", i, j, k, l, woooo.get_element(i, j, k, l));
+                }
+            }
+        }
+    }
+
     return 0;
 }
 

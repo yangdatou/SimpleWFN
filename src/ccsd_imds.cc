@@ -243,44 +243,98 @@ VV make_imds_lvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2e
     return lac;
 }
 
-def cc_Woooo(t1, t2, eris):
-    eris_ovoo = np.asarray(eris.ovoo)
-    Wklij  = lib.einsum('lcki,jc->klij', eris_ovoo, t1) 
-    Wklij += lib.einsum('kclj,ic->klij', eris_ovoo, t1) 
-    eris_ovov = np.asarray(eris.ovov)
-    Wklij += lib.einsum('kcld,ijcd->klij', eris_ovov, t2) 
-    Wklij += lib.einsum('kcld,ic,jd->klij', eris_ovov, t1, t1) 
-    Wklij += np.asarray(eris.oooo).transpose(0,2,1,3)
-    return Wklij
+OOOO make_imds_woooo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo)
+{
+    int nocc = t1.rows();
+    int nvir = t1.cols();
 
-def cc_Wvvvv(t1, t2, eris):
-    # Incore
-    eris_ovvv = np.asarray(eris.get_ovvv())
-    Wabcd  = lib.einsum('kdac,kb->abcd', eris_ovvv,-t1)
-    Wabcd -= lib.einsum('kcbd,ka->abcd', eris_ovvv, t1) 
-    Wabcd += np.asarray(_get_vvvv(eris)).transpose(0,2,1,3)
-    return Wabcd
+    OOOO wijkl(nocc, nvir);
+    
+    double t1_jc    = 0.0; // t1
+    double t1_ic    = 0.0; // t1
+    double t1_jd    = 0.0; // t1
+    double t2_ijcd  = 0.0; // t2
 
-def cc_Wvoov(t1, t2, eris):
-    eris_ovvv = np.asarray(eris.get_ovvv())
-    eris_ovoo = np.asarray(eris.ovoo)
-    Wakic  = lib.einsum('kcad,id->akic', eris_ovvv, t1) 
-    Wakic -= lib.einsum('kcli,la->akic', eris_ovoo, t1) 
-    Wakic += np.asarray(eris.ovvo).transpose(2,0,3,1)
-    eris_ovov = np.asarray(eris.ovov)
-    Wakic -= 0.5*lib.einsum('ldkc,ilda->akic', eris_ovov, t2) 
-    Wakic -= 0.5*lib.einsum('lckd,ilad->akic', eris_ovov, t2) 
-    Wakic -= lib.einsum('ldkc,id,la->akic', eris_ovov, t1, t1) 
-    Wakic += lib.einsum('ldkc,ilad->akic', eris_ovov, t2) 
-    return Wakic
+    double eri_lcki = 0.0; // ovoo
+    double eri_kclj = 0.0; // ovoo
+    double eri_kcld = 0.0; // ovov
 
-def cc_Wvovo(t1, t2, eris):
-    eris_ovvv = np.asarray(eris.get_ovvv())
-    eris_ovoo = np.asarray(eris.ovoo)
-    Wakci  = lib.einsum('kdac,id->akci', eris_ovvv, t1)
-    Wakci -= lib.einsum('lcki,la->akci', eris_ovoo, t1)
-    Wakci += np.asarray(eris.oovv).transpose(2,0,3,1)
-    eris_ovov = np.asarray(eris.ovov)
-    Wakci -= 0.5*lib.einsum('lckd,ilda->akci', eris_ovov, t2)
-    Wakci -= lib.einsum('lckd,id,la->akci', eris_ovov, t1, t1)
-    return Wakci
+    double w_klij   = 0.0;
+
+    OccIndex i, j, k, l;
+    OccIndex c, d;
+
+    FOR_OCC(l, nocc, nvir) {
+        FOR_OCC(k, nocc, nvir) {
+            FOR_OCC(j, nocc, nvir) {
+                FOR_OCC(i, nocc, nvir) {
+                    w_klij = 0.0;
+
+                    FOR_VIR(c, nocc, nvir) {
+                        eri_lcki = get_eri_mo_element(eri_mo, l, c, k, i);
+                        eri_kclj = get_eri_mo_element(eri_mo, k, c, l, j);
+
+                        t1_jc    = t1(j, c - nocc);
+                        t1_ic    = t1(i, c - nocc);
+
+                        w_klij  += eri_lcki * t1_jc;
+                        w_klij  += eri_kclj * t1_ic;
+                    }
+
+
+                    FOR_VIR(c, nocc, nvir) {
+                        FOR_VIR(d, nocc, nvir) {
+                            eri_kcld = get_eri_mo_element(eri_mo, k, c, l, d);
+
+                            t1_ic    = t1(i, c - nocc);
+                            t1_jd    = t1(j, d - nocc);
+                            t2_ijcd  = t2.get_element(i, j, c, d);
+
+                            w_klij += eri_kcld * t1_jd * t1_ic;
+                            w_klij += eri_kcld * t2_ijcd;
+                        }
+                    }
+
+                    w_klij += get_eri_mo_element(eri_mo, k, i, l, j);
+
+                    wijkl.set_element(i, j, k, l, w_klij);
+                }
+            }
+        }
+    }
+
+    return wijkl;
+}
+
+
+// def cc_Wvvvv(t1, t2, eris):
+//     # Incore
+//     eris_ovvv = np.asarray(eris.get_ovvv())
+//     Wabcd  = lib.einsum('kdac,kb->abcd', eris_ovvv,-t1)
+//     Wabcd -= lib.einsum('kcbd,ka->abcd', eris_ovvv, t1) 
+//     Wabcd += np.asarray(_get_vvvv(eris)).transpose(0,2,1,3)
+//     return Wabcd
+
+// def cc_Wvoov(t1, t2, eris):
+//     eris_ovvv = np.asarray(eris.get_ovvv())
+//     eris_ovoo = np.asarray(eris.ovoo)
+//     Wakic  = lib.einsum('kcad,id->akic', eris_ovvv, t1) 
+//     Wakic -= lib.einsum('kcli,la->akic', eris_ovoo, t1) 
+//     Wakic += np.asarray(eris.ovvo).transpose(2,0,3,1)
+//     eris_ovov = np.asarray(eris.ovov)
+//     Wakic -= 0.5*lib.einsum('ldkc,ilda->akic', eris_ovov, t2) 
+//     Wakic -= 0.5*lib.einsum('lckd,ilad->akic', eris_ovov, t2) 
+//     Wakic -= lib.einsum('ldkc,id,la->akic', eris_ovov, t1, t1) 
+//     Wakic += lib.einsum('ldkc,ilad->akic', eris_ovov, t2) 
+//     return Wakic
+
+// def cc_Wvovo(t1, t2, eris):
+//     eris_ovvv = np.asarray(eris.get_ovvv())
+//     eris_ovoo = np.asarray(eris.ovoo)
+//     Wakci  = lib.einsum('kdac,id->akci', eris_ovvv, t1)
+//     Wakci -= lib.einsum('lcki,la->akci', eris_ovoo, t1)
+//     Wakci += np.asarray(eris.oovv).transpose(2,0,3,1)
+//     eris_ovov = np.asarray(eris.ovov)
+//     Wakci -= 0.5*lib.einsum('lckd,ilda->akci', eris_ovov, t2)
+//     Wakci -= lib.einsum('lckd,id,la->akci', eris_ovov, t1, t1)
+//     return Wakci

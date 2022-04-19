@@ -57,14 +57,14 @@ class OOVV {
         }
 
         void set_element(const OccIndex i, const OccIndex j, const VirIndex aa, const VirIndex bb, double value) {
-            VirIndex a = aa - this -> nocc;
-            VirIndex b = bb - this -> nocc;
+            VirIndex a = aa - nocc;
+            VirIndex b = bb - nocc;
             this->_data(i * nocc + j, a * nvir + b) = value;
         }
 
         double const get_element(OccIndex i, OccIndex j, VirIndex aa, VirIndex bb) const {
-            VirIndex a = aa - this -> nocc;
-            VirIndex b = bb - this -> nocc;
+            VirIndex a = aa - nocc;
+            VirIndex b = bb - nocc;
             return this->_data(i * nocc + j, a * nvir + b);
         }
 
@@ -87,18 +87,18 @@ class VVVV {
         }
 
         void set_element(const VirIndex aa, const VirIndex bb, const VirIndex cc, const VirIndex dd, double value) {
-            VirIndex a = aa - this -> nocc;
-            VirIndex b = bb - this -> nocc;
-            VirIndex c = cc - this -> nocc;
-            VirIndex d = dd - this -> nocc;
+            VirIndex a = aa - nocc;
+            VirIndex b = bb - nocc;
+            VirIndex c = cc - nocc;
+            VirIndex d = dd - nocc;
             this->_data(a * nvir + b, c * nvir + d) = value;
         }
 
         double const get_element(VirIndex aa, VirIndex bb, VirIndex cc, VirIndex dd) const {
-            VirIndex a = aa - this -> nocc;
-            VirIndex b = bb - this -> nocc;
-            VirIndex c = cc - this -> nocc;
-            VirIndex d = dd - this -> nocc;
+            VirIndex a = aa - nocc;
+            VirIndex b = bb - nocc;
+            VirIndex c = cc - nocc;
+            VirIndex d = dd - nocc;
             return this->_data(a * nvir + b, c * nvir + d);
         }
 
@@ -116,18 +116,20 @@ class VOOV {
             this->nocc = nocc;
             this->nvir = nvir;
             this->nmo  = nocc + nvir;
-            this->_data =  _VOOV(nvir*nocc, nocc*nocc);
-            this->_data << _VOOV::Zero(nvir*nocc, nocc*nocc);
+            this->_data =  _VOOV(nvir*nocc, nocc*nvir);
+            this->_data << _VOOV::Zero(nvir*nocc, nocc*nvir);
         }
 
-        void set_element(const VirIndex aa, const OccIndex i, const OccIndex j, double value) {
-            VirIndex a = aa - this -> nocc;
-            this->_data(a * nvir + i, j * nocc + j) = value;
+        void set_element(const VirIndex aa, const OccIndex i, const OccIndex j, const OccIndex bb, double value) {
+            VirIndex a = aa - nocc;
+            VirIndex b = bb - nocc;
+            this->_data(a * nocc + i, j * nvir + b) = value;
         }
 
-        double const get_element(VirIndex aa, OccIndex i, OccIndex j) const {
-            VirIndex a = aa - this -> nocc;
-            return this->_data(a * nvir + i, j * nocc + j);
+        double const get_element(const VirIndex aa, const OccIndex i, const OccIndex j, const OccIndex bb) const {
+            VirIndex a = aa - nocc;
+            VirIndex b = bb - nocc;
+            return this->_data(a * nocc + i, j * nvir + b);
         }
 
     private:
@@ -144,18 +146,20 @@ class VOVO {
             this->nocc = nocc;
             this->nvir = nvir;
             this->nmo  = nocc + nvir;
-            this->_data =  _VOVO(nvir*nocc, nocc*nocc);
-            this->_data << _VOVO::Zero(nvir*nocc, nocc*nocc);
+            this->_data =  _VOVO(nvir*nocc, nvir*nocc);
+            this->_data << _VOVO::Zero(nvir*nocc, nvir*nocc);
         }
 
-        void set_element(const VirIndex aa, const OccIndex i, const OccIndex j, double value) {
-            VirIndex a = aa - this -> nocc;
-            this->_data(a * nvir + i, j * nocc + j) = value;
+        void set_element(const VirIndex aa, const OccIndex i, const VirIndex bb, const OccIndex j, double value) {
+            VirIndex a = aa - nocc;
+            VirIndex b = bb - nocc;
+            this->_data(a * nocc + i, b * nocc + j) = value;
         }
 
-        double const get_element(VirIndex aa, OccIndex i, OccIndex j) const {
-            VirIndex a = aa - this -> nocc;
-            return this->_data(a * nvir + i, j * nocc + j);
+        double const get_element(const VirIndex aa, const OccIndex i, const VirIndex bb, const OccIndex j) const {
+            VirIndex a = aa - nocc;
+            VirIndex b = bb - nocc;
+            return this->_data(a * nocc + i, b * nocc + j);
         }
 
     private:
@@ -167,3 +171,4 @@ VV make_imds_fvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2e
 OV make_imds_fov(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);
 OO make_imds_loo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);
 VV make_imds_lvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);
+OOOO make_imds_woooo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);

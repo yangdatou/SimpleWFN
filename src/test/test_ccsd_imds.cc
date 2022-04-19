@@ -173,6 +173,21 @@ int main()
     //     }
     // }
 
+    auto wvoov = make_imds_wvoov(t1, t2, fock_mo, eri_mo);
+
+    VirIndex a, b;
+    OccIndex i, j;
+
+    FOR_VIR(a, nocc, nvir) {
+        FOR_VIR(b, nocc, nvir) {
+            FOR_OCC(i, nocc, nvir) {
+                FOR_OCC(j, nocc, nvir) {
+                    printf("- %d, %d, %d, %d, % 8.6f\n", a, i, j, b, wvoov.get_element(a, i, j, b));
+                }
+            }
+        }
+    }
+
     return 0;
 }
 

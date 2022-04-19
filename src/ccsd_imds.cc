@@ -350,18 +350,71 @@ VVVV make_imds_wvvvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
     return wabcd;
 }
 
-// def cc_Wvoov(t1, t2, eris):
-//     eris_ovvv = np.asarray(eris.get_ovvv())
-//     eris_ovoo = np.asarray(eris.ovoo)
-//     Wakic  = lib.einsum('kcad,id->akic', eris_ovvv, t1) 
-//     Wakic -= lib.einsum('kcli,la->akic', eris_ovoo, t1) 
-//     Wakic += np.asarray(eris.ovvo).transpose(2,0,3,1)
-//     eris_ovov = np.asarray(eris.ovov)
-//     Wakic -= 0.5*lib.einsum('ldkc,ilda->akic', eris_ovov, t2) 
-//     Wakic -= 0.5*lib.einsum('lckd,ilad->akic', eris_ovov, t2) 
-//     Wakic -= lib.einsum('ldkc,id,la->akic', eris_ovov, t1, t1) 
-//     Wakic += lib.einsum('ldkc,ilad->akic', eris_ovov, t2) 
-//     return Wakic
+VOOV make_imds_wvoov(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo)
+{
+    int nocc = t1.rows();
+    int nvir = t1.cols();
+
+    VOOV wakic(nocc, nvir);
+
+    double t1_id   = 0.0; // t1
+    double t1_la   = 0.0; // t1
+    double t2_ilda = 0.0; // t2
+    double t2_ilad = 0.0; // t2
+
+    double eri_kcad = 0.0; // ovvv
+    double eri_kcli = 0.0; // ovoo
+    double eri_iack = 0.0; // ovov
+    double eri_ldkc = 0.0; // ovov
+    double eri_lckd = 0.0; // ovov
+
+    double w_akic   = 0.0;
+
+    VirIndex a, c, d;
+    OccIndex k, i, l;
+
+    FOR_VIR(a, nocc, nvir) {
+        FOR_OCC(k, nocc, nvir) {
+            FOR_OCC(i, nocc, nvir) {
+                FOR_VIR(c, nocc, nvir) {
+                    w_akic = 0.0;
+
+                        FOR_OCC(l, nocc, nvir) {
+                            FOR_VIR(d, nocc, nvir) {
+                                eri_kcad = get_eri_ao_element(eri_mo, k, c, a, d);
+                                eri_kcli = get_eri_ao_element(eri_mo, k, c, i, l);
+                                eri_ldkc = get_eri_ao_element(eri_mo, l, d, k, c);
+                                eri_lckd = get_eri_ao_element(eri_mo, l, c, k, d);
+
+                                t2_ilda  = t2.get_element(i, l, d, a);
+                                t2_ilad  = t2.get_element(i, l, a, d);
+
+                                t1_id    = t1(i, d - nocc);
+                                t1_la    = t1(l, a - nocc);
+
+                                w_akic  += eri_kcad * t1_id;
+                                w_akic  -= eri_kcli * t1_la;
+
+                                w_akic  += eri_iack;
+
+                                w_akic  -= 0.5 * eri_ldkc * t2_ilda;
+                                w_akic  -= 0.5 * eri_lckd * t2_ilad;
+
+                                w_akic  -= eri_ldkc * t1_id * t1_la;
+                                w_akic  += eri_ldkc * t2_ilad;
+                            }
+                        }
+
+                    w_akic += get_eri_mo_element(eri_mo, i, a, c, k);
+                    wakic.set_element(a, k, i, c, w_akic);
+                }
+            }
+        }
+    }
+
+    return wakic;
+
+}
 
 // def cc_Wvovo(t1, t2, eris):
 //     eris_ovvv = np.asarray(eris.get_ovvv())
@@ -373,3 +426,22 @@ VVVV make_imds_wvvvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
 //     Wakci -= 0.5*lib.einsum('lckd,ilda->akci', eris_ovov, t2)
 //     Wakci -= lib.einsum('lckd,id,la->akci', eris_ovov, t1, t1)
 //     return Wakci
+
+VOVO make_imds_wvovo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo)
+{
+    int nocc = t1.rows();
+    int nvir = t1.cols();
+
+    VOVO wakci(nocc, nvir);
+    
+    double t1_id   = 0.0; // t1
+    double t1_la   = 0.0; // t1
+    double t2_ilda = 0.0; // t2
+
+    double eri_kdac = 0.0; // ovvv
+    double eri_lcki = 0.0; // ovoo
+    double eri_lckd = 0.0; // ovov
+    double eri_caik = 0.0; // ovov
+
+    double w_akci   = 0.0;
+}

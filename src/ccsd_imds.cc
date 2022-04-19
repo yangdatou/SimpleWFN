@@ -296,8 +296,7 @@ OOOO make_imds_woooo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
                     }
 
                     w_klij += get_eri_mo_element(eri_mo, k, i, l, j);
-
-                    wijkl.set_element(i, j, k, l, w_klij);
+                    wijkl.set_element(k, l, i, j, w_klij);
                 }
             }
         }
@@ -306,14 +305,50 @@ OOOO make_imds_woooo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
     return wijkl;
 }
 
+VVVV make_imds_wvvvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo)
+{
+    int nocc = t1.rows();
+    int nvir = t1.cols();
 
-// def cc_Wvvvv(t1, t2, eris):
-//     # Incore
-//     eris_ovvv = np.asarray(eris.get_ovvv())
-//     Wabcd  = lib.einsum('kdac,kb->abcd', eris_ovvv,-t1)
-//     Wabcd -= lib.einsum('kcbd,ka->abcd', eris_ovvv, t1) 
-//     Wabcd += np.asarray(_get_vvvv(eris)).transpose(0,2,1,3)
-//     return Wabcd
+    VVVV wabcd(nocc, nvir);
+
+    double t1_kb    = 0.0; // t1
+    double t1_ka    = 0.0; // t1
+
+    double eri_kdac = 0.0; // ovvv
+    double eri_kcbd = 0.0; // ovvv
+
+    double w_abcd   = 0.0;
+
+    OccIndex a, b, c, d;
+    OccIndex k;
+
+    FOR_VIR(a, nocc, nvir) {
+        FOR_VIR(b, nocc, nvir) {
+            FOR_VIR(c, nocc, nvir) {
+                FOR_VIR(d, nocc, nvir) {
+                    w_abcd = 0.0;
+
+                    FOR_OCC(k, nocc, nvir) {
+                        eri_kdac = get_eri_mo_element(eri_mo, k, d, a, c);
+                        eri_kcbd = get_eri_mo_element(eri_mo, k, c, b, d);
+
+                        t1_kb    = t1(k, b - nocc);
+                        t1_ka    = t1(k, a - nocc);
+
+                        w_abcd  -= eri_kdac * t1_kb;
+                        w_abcd  -= eri_kcbd * t1_ka;
+                    }
+
+                    w_abcd += get_eri_mo_element(eri_mo, a, c, b, d);
+                    wabcd.set_element(a, b, c, d, w_abcd);
+                }
+            }
+        }
+    }
+
+    return wabcd;
+}
 
 // def cc_Wvoov(t1, t2, eris):
 //     eris_ovvv = np.asarray(eris.get_ovvv())

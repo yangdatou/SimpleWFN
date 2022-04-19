@@ -171,4 +171,6 @@ VV make_imds_fvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2e
 OV make_imds_fov(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);
 OO make_imds_loo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);
 VV make_imds_lvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);
+
 OOOO make_imds_woooo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);
+VVVV make_imds_wvvvv(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo);

@@ -33,6 +33,7 @@ The purpose of this project is to understand this transformation and fundamental
 
 ## Coupled-Cluster Singles and Doubles (CCSD) 
 The coupled cluster model provides a higher level of accuracy beyond the MP2 approach. The purpose of this project is to understand the fundamental aspects of the calculation of the CCSD wave function and corresponding energy. 
+
 ## Run Code
 To run the code, use the following commands:
 ```

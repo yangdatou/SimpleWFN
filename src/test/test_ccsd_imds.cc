@@ -1,25 +1,15 @@
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <string>
-#include <cstdio>
-#include <cassert>
+#include "unit_test_tools.h"
 
-#include "Eigen/Dense"
-#include "Eigen/Eigenvalues"
-#include "Eigen/Core"
+#include "../ccsd_imds.h"
 
-#include "utils.h"
-#include "ccsd_imds.h"
+#define MAX_ITER 100
+#define TOL 1e-8
 
-const double   TOL = 1e-8;
-const int MAX_ITER = 100;
+TEST(test_h2o_sto3g) {
 
-int main(int argc, char *argv[])
-{
-    std::string path{argv[1]}; 
-    int nelec_alpha = atoi(argv[2]);
-    int nelec_beta  = atoi(argv[3]);
+    std::string path{"./input/h2o/STO-3G/"};
+    int nelec_alpha = 5;
+    int nelec_beta  = 5;
     assert(nelec_alpha == nelec_beta);
 
     printf("nelec_alpha = %d\n", nelec_alpha);
@@ -48,6 +38,7 @@ int main(int argc, char *argv[])
     mo_coeff   = solver.eigenvectors();
     mo_energy  = solver.eigenvalues();
     int nmo = mo_energy.rows();
+    int nvir = nmo - nocc;
 
     orbo = mo_coeff(Eigen::all, Eigen::seq(0, nocc - 1));  
     orbv = mo_coeff(Eigen::all, Eigen::seq(nocc, nmo - 1));
@@ -112,10 +103,18 @@ int main(int argc, char *argv[])
     Int1eMO fock_mo = mo_coeff.transpose() * fock * mo_coeff;
     Int2eMO eri_mo  = make_eri_mo(eri_ao, mo_coeff);
 
+    print_matrix(mo_coeff, "mo_coeff");
+    print_matrix(fock_mo, "fock_mo");
+
+    OV   t1(nocc, nvir);
+    t1 << OV::Zero(nocc, nvir);
+    OOVV t2 = OOVV(nocc, nvir);
+
     double e_mp2 = 0.0;
 
     double eri_iajb = 0.0;
     double eri_ibja = 0.0;
+    double t2_ijab  = 0.0;
     
     for(int i = 0; i < nocc; ++i){
         for(int a = nocc; a < nmo; ++a){
@@ -123,51 +122,32 @@ int main(int argc, char *argv[])
                 for(int b = nocc; b < nmo; ++b){
                     eri_iajb = get_eri_mo_element(eri_mo, i, a, j, b);
                     eri_ibja = get_eri_mo_element(eri_mo, i, b, j, a);
-                    e_mp2 += eri_iajb * (2 * eri_iajb - eri_ibja) / (mo_energy(i) + mo_energy(j) - mo_energy(a) - mo_energy(b));
+                    t2_ijab = (2 * eri_iajb - eri_ibja) / (mo_energy(i) + mo_energy(j) - mo_energy(a) - mo_energy(b));
+                    e_mp2 += t2_ijab * eri_iajb;
+                    t2.set_element(i, j, a, b, t2_ijab);
                 }
             }
         }
     }
 
+    // e_mp2 *= 0.25;
+
     printf("MP2 energy = % 12.8f\n", e_mp2);
 
-    // TODO: CCSD equations
-    // Ref: 
-    // (1) J. Chem. Phys. 94, 4334 (1991); https://doi.org/10.1063/1.460620
-    // Eqs. (1)-(13)
-    // (2) J. Chem. Phys. 120, 2581 (2004); https://doi.org/10.1063/1.1637577
-    // Eqs. (35)-(36)
-    // (3) PySCF: https://github.com/pyscf/pyscf/blob/fa7a73bbed25fca45c25db28bf41cc9ec556bd97/pyscf/cc/rccsd.py#L43
+    print_matrix(t1, "t1");
+    for (int i = 0; i < nocc; ++i) {
+        for (int j = 0; j < nocc; ++j) {
+            for (int a = nocc; a < nmo; ++a) {
+                for (int b = nocc; b < nmo; ++b) {
+                    t2_ijab = t2.get_element(i, j, a, b);
+                    printf("- t2(%d, %d, %d, %d) = % 12.8f\n", i, j, a, b, t2_ijab);
+                }
+            }
+        }
+    }
 
-    // d_vo   = fock_mo(i, i) - fock_mo(a, a);
-    // d_oovv = fock_mo(i, i) + fock_mo(j, j) - fock_mo(a, a) + fock_mo(b, b);
-
-    // cur_tvo, cur_tvvoo;
-    // pre_tvo, pre_tvvoo;
-
-    // CCSDProblem ccsd;
-    // Hold fock_mo, eri_mo, d_vo, d_oovv;
-
-    // while (not is_converged and not is_max_iter){
-    //     tau1_vvoo = make_tau1_vvoo(...);
-    //     tau2_vvoo = make_tau2_vvoo(...);
-
-    //     fvv_imds = make_ccsd_fvv_imds(...);
-    //     foo_imds = make_ccsd_foo_imds(...)
-    //     fov_imds = make_ccsd_fov_imds(...)
-    //     woooo_imds = make_ccsd_woooo_imds(...)
-    //     wvvvv_imds = make_ccsd_wovvo_imds(...)
-    //     wovvo_imds = make_ccsd_wovvo_imds(...)
-
-    //     rhs_vo   = make_ccsd_rhs_vo(...)
-    //     rhs_vvoo = make_ccsd_rhs_vvoo(...) and rhs_vvoo = make_cc2_rhs_vvoo(...)
-
-    //     pre_tvo   = cur_tvo;
-    //     pre_tvvoo = cur_tvvoo;
-    
-    //     cur_tvo  = rhs_vo / d_vo;
-    //     cur_vvoo = rhs_vvoo / d_oovv;
-    //     }
-
-    return 0;
+    auto foo = make_imds_foo(t1, t2, fock_mo, eri_mo);
+    // print_matrix(foo, "foo");
 }
+
+TEST_MAIN()

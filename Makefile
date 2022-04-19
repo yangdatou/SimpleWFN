@@ -32,6 +32,12 @@ test_utils: ./src/test/test_utils.cc ./bin/utils.o
 ./bin/utils.o: ./src/utils.cc
 	$(CXX) $(CXXFLAGS) -o ./bin/utils.o -c $^
 
+test_ccsd_imds: ./src/test/test_ccsd_imds.cc ./bin/ccsd_imds.o ./bin/utils.o
+	$(CXX) $(CXXFLAGS) -o ./bin/test_ccsd_imds.x $^
+
+./bin/ccsd_imds.o: ./src/ccsd_imds.cc
+	$(CXX) $(CXXFLAGS) -o ./bin/ccsd_imds.o -c $^
+
 # Remove automatically generated files
 clean :
 	rm -rf ./bin/* ./output/*.log

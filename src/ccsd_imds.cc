@@ -413,17 +413,6 @@ VOOV make_imds_wvoov(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const I
 
 }
 
-// def cc_Wvovo(t1, t2, eris):
-//     eris_ovvv = np.asarray(eris.get_ovvv())
-//     eris_ovoo = np.asarray(eris.ovoo)
-//     Wakci  = lib.einsum('kdac,id->akci', eris_ovvv, t1)
-//     Wakci -= lib.einsum('lcki,la->akci', eris_ovoo, t1)
-//     Wakci += np.asarray(eris.oovv).transpose(2,0,3,1)
-//     eris_ovov = np.asarray(eris.ovov)
-//     Wakci -= 0.5*lib.einsum('lckd,ilda->akci', eris_ovov, t2)
-//     Wakci -= lib.einsum('lckd,id,la->akci', eris_ovov, t1, t1)
-//     return Wakci
-
 VOVO make_imds_wvovo(const OV& t1, const OOVV& t2, const Int1e& fock_mo, const Int2eMO& eri_mo)
 {
     int nocc = t1.rows();

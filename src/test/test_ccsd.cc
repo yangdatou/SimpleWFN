@@ -1,6 +1,6 @@
 // #include "unit_test_tools.h"
 
-#include "../ccsd_imds.h"
+#include "../ccsd.h"
 
 #define MAX_ITER 100
 #define TOL      1e-8
@@ -130,31 +130,47 @@ int main()
 
     printf("MP2 energy = % 12.8f\n", e_mp2);
 
-    OV*   t1cur = &t1;
-    OOVV* t2cur = &t2;
+    OV   cur_t1(nocc, nvir);
+    OOVV cur_t2(nocc, nvir);
 
-    // OV*   t1pre = &t1;
-    // OOVV* t2pre = &t2;
+    OV   pre_t1(nocc, nvir);
+    OOVV pre_t2(nocc, nvir);
 
+    pre_t1 = t1;
+    pre_t2 = t2;
+
+    iter         = 0;
     is_converged = false;
     is_max_iter  = false;
 
+    cur_energy = 0.0;
+    pre_energy = 0.0;
+    err_energy = 1.0;
+
+    double e_ccsd     = 0.0;
+    double err_amps   = 1.0;
+
     while (not is_converged and not is_max_iter) {
-        auto foo   = make_imds_foo(*t1cur, *t2cur, fock_mo, eri_mo);
-        auto fvv   = make_imds_fvv(*t1cur, *t2cur, fock_mo, eri_mo);
-        auto fov   = make_imds_fov(*t1cur, *t2cur, fock_mo, eri_mo);
-        auto loo   = make_imds_loo(*t1cur, *t2cur, fock_mo, eri_mo);
-        auto lvv   = make_imds_lvv(*t1cur, *t2cur, fock_mo, eri_mo);
 
-        auto woooo = make_imds_woooo(*t1cur, *t2cur, fock_mo, eri_mo);
-        auto wvvvv = make_imds_wvvvv(*t1cur, *t2cur, fock_mo, eri_mo);
-        auto wvoov = make_imds_wvoov(*t1cur, *t2cur, fock_mo, eri_mo);
-        auto wvovo = make_imds_wvovo(*t1cur, *t2cur, fock_mo, eri_mo);
+        update_amps(pre_t1, pre_t2, cur_t1, cur_t2, fock_mo, eri_mo);
 
-        is_converged = true;
-        is_max_iter  = true;
+        print_matrix(cur_t1, "cur_t1");
+
+        err_amps = 1e-6;
+
+        pre_t1 = cur_t1;
+        pre_t2 = cur_t2;
+
+        is_converged = (err_amps < TOL);
+        is_max_iter  = (iter > -1);
+
+        printf("iter = % 3d, elec_energy = % 12.8f, err_energy = % 6.4e\n", iter, cur_energy, err_energy);
+
+        pre_energy = cur_energy;
+        iter += 1;
     }
-    
+
+    printf("CCSD energy = % 12.8f\n", e_ccsd);
     return 0;
 }
 
